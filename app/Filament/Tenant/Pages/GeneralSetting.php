@@ -43,7 +43,9 @@ class GeneralSetting extends Page implements HasActions, HasForms
     protected static string $view = 'filament.tenant.pages.general-setting';
 
     public $about = [
+        'shop_name' => '',
         'shop_location' => '',
+        'business_type' => '',
         'photo' => '',
     ];
 
@@ -98,6 +100,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
             Tabs::make('Tabs')
                 ->tabs([
                     Tabs\Tab::make('About')
+                        ->visible(can('r about'))
                         ->statePath('about')
                         ->translateLabel()
                         ->schema(About::form()),
@@ -110,6 +113,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                     'IDR' => 'IDR',
                                     'USD' => 'USD',
                                 ])
+                                ->visible(can('u currency'))
                                 ->translateLabel(),
                             Select::make('minimum_stock_nofication')
                                 ->options([
@@ -121,6 +125,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                 ])
                                 ->translateLabel(),
                             TextInput::make('default_tax')
+                                ->visible(can('set default tax'))
                                 ->numeric()
                                 ->suffix('%')
                                 ->translateLabel(),
@@ -179,7 +184,8 @@ class GeneralSetting extends Page implements HasActions, HasForms
         $this->validate([
             'about.shop_name' => 'required',
             'about.shop_location' => 'required',
-            'about.currency' => 'required',
+            'about.business_type' => 'required',
+            // 'about.currency' => 'required',
             // 'data.photo' => 'required',
         ]);
 

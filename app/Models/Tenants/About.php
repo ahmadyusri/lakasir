@@ -65,6 +65,7 @@ class About extends Model
                 ->translateLabel(),
             Actions::make([
                 Action::make('Save')
+                    ->visible(can('u about'))
                     ->translateLabel()
                     ->requiresConfirmation()
                     ->action('saveAbout'),
