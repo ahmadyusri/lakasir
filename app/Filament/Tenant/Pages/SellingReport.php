@@ -37,6 +37,8 @@ class SellingReport extends Page implements HasActions, HasForms
 
     public function mount()
     {
+        abort_unless(can('generate selling report'), 403);
+
         $this->generate(new SellingReportService);
     }
 

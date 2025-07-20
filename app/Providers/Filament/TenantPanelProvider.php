@@ -191,7 +191,7 @@ class TenantPanelProvider extends PanelProvider
                 $this->generateNavigationItem(RoleResource::class, Role::class),
                 $this->generateNavigationItem(PermissionResource::class, Permission::class),
             ]),
-            NavigationGroup::make(__('Report'))->label('')->collapsible(false)->items([
+            ...(can('generate selling report') || can('generate product report') || can('generate cashier report') || can('generate purchasing report') ? [NavigationGroup::make(__('Report'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(
                     resource: Report::class,
                     activeWhen: [
@@ -201,7 +201,7 @@ class TenantPanelProvider extends PanelProvider
                         PurchasingReport::class,
                     ]
                 ),
-            ]),
+            ])] : []),
             NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),

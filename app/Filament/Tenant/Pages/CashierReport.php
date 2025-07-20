@@ -37,6 +37,8 @@ class CashierReport extends Page implements HasActions, HasForms
 
     public function mount()
     {
+        abort_unless(can('generate cashier report'), 403);
+
         $this->generate(new CashierReportService);
     }
 
