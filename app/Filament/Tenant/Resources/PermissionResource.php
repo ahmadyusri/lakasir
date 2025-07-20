@@ -27,7 +27,7 @@ class PermissionResource extends Resource
                 TextColumn::make('guard_name')
                     ->translateLabel(),
             ])
-            ->paginated(false);
+            ->paginated(20);
     }
 
     public static function getPages(): array
