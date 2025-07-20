@@ -100,7 +100,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
             Tabs::make('Tabs')
                 ->tabs([
                     Tabs\Tab::make('About')
-                        ->visible(can('r about'))
+                        ->visible(can('read about'))
                         ->statePath('about')
                         ->translateLabel()
                         ->schema(About::form()),
@@ -113,7 +113,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                     'IDR' => 'IDR',
                                     'USD' => 'USD',
                                 ])
-                                ->visible(can('u currency'))
+                                ->visible(can('update currency'))
                                 ->translateLabel(),
                             Select::make('minimum_stock_nofication')
                                 ->options([
