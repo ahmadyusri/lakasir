@@ -11,7 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
@@ -29,18 +29,19 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('filament-panels::pages/auth/edit-profile.form.name.label'))
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email')
+                    ->label(__('filament-panels::pages/auth/edit-profile.form.email.label'))
                     ->unique(ignoreRecord: true)
                     ->email()
                     ->required(),
                 TextInput::make('profile.phone')
-                    ->label('Phone'),
+                    ->label(__('Phone Number')),
                 TextInput::make('profile.address')
-                    ->label('Address'),
+                    ->label(__('Address')),
                 TextInput::make('password')
+                    ->label(__('filament-panels::pages/auth/edit-profile.form.password.label'))
                     ->password()
                     ->revealable(filament()->arePasswordsRevealable())
                     ->dehydrateStateUsing(fn ($state): string => Hash::make($state))
@@ -50,9 +51,9 @@ class UserResource extends Resource
                 TextInput::make('password_confirmation')
                     ->password()
                     ->revealable(filament()->arePasswordsRevealable())
-                    ->label('Confirm New Password'),
+                    ->label(__('filament-panels::pages/auth/edit-profile.form.password_confirmation.label')),
                 Select::make('roles')
-                    ->label('Roles')
+                    ->label(__('Roles'))
                     ->default(1)
                     ->visible(hasFeatureAndPermission(Role::class))
                     ->relationship('roles', 'name'),
@@ -68,18 +69,26 @@ class UserResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('filament-panels::pages/auth/edit-profile.form.name.label'))
                     ->searchable(),
                 TextColumn::make('email')
+                    ->label(__('filament-panels::pages/auth/edit-profile.form.email.label'))
                     ->searchable(),
                 TextColumn::make('profile.phone')
                     ->searchable()
-                    ->label('Phone'),
+                    ->label(__('Phone Number')),
                 TextColumn::make('profile.address')
-                    ->label('Address'),
+                    ->label(__('Address')),
                 TextColumn::make('roles.0.name')
                     ->visible(hasFeatureAndPermission(Role::class))
-                    ->label('Role'),
-                BooleanColumn::make('is_owner'),
+                    ->label(__('Role')),
+                IconColumn::make('is_owner')
+                    ->boolean()
+                    ->trueColor('info')
+                    ->falseColor('warning')
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->label(__('Is Owner')),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

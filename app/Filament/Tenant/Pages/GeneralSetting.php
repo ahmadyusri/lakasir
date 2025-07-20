@@ -110,6 +110,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
                         ->schema([
                             Select::make('currency')
                                 ->options([
+                                    '' => '-- ' . __('Choose Currency') . ' --',
                                     'IDR' => 'IDR',
                                     'USD' => 'USD',
                                 ])

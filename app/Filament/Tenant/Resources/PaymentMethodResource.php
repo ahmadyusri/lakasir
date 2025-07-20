@@ -5,12 +5,13 @@ namespace App\Filament\Tenant\Resources;
 use App\Filament\Tenant\Resources\PaymentMethodResource\Pages;
 use App\Models\Tenants\PaymentMethod;
 use App\Traits\HasTranslatableResource;
-use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -29,12 +30,13 @@ class PaymentMethodResource extends Resource
                 TextInput::make('name')
                     ->translateLabel()
                     ->columnSpanFull(),
-                Card::make([
-                    Checkbox::make('is_cash')->inline(),
-                    Checkbox::make('is_debit')->inline(),
-                    Checkbox::make('is_credit')->inline(),
-                    Checkbox::make('is_wallet')->inline(),
-                ]),
+                Section::make()
+                    ->schema([
+                        Checkbox::make('is_cash')->label(__('Is Cash'))->inline(),
+                        Checkbox::make('is_debit')->label(__('Is Debit'))->inline(),
+                        Checkbox::make('is_credit')->label(__('Is Credit'))->inline(),
+                        Checkbox::make('is_wallet')->label(__('Is Wallet'))->inline(),
+                    ]),
             ]);
     }
 
@@ -45,42 +47,34 @@ class PaymentMethodResource extends Resource
                 TextColumn::make('name')
                     ->translateLabel()
                     ->searchable(),
-                TextColumn::make('is_cash')
-                    ->badge()
-                    ->getStateUsing(function (PaymentMethod $pMethod) {
-                        return $pMethod->is_cash ? 'Yes' : 'No';
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        'No' => 'danger',
-                        'Yes' => 'success',
-                    }),
-                TextColumn::make('is_debit')
-                    ->badge()
-                    ->getStateUsing(function (PaymentMethod $pMethod) {
-                        return $pMethod->is_debit ? 'Yes' : 'No';
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        'No' => 'danger',
-                        'Yes' => 'success',
-                    }),
-                TextColumn::make('is_credit')
-                    ->badge()
-                    ->getStateUsing(function (PaymentMethod $pMethod) {
-                        return $pMethod->is_credit ? 'Yes' : 'No';
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        'No' => 'danger',
-                        'Yes' => 'success',
-                    }),
-                TextColumn::make('is_wallet')
-                    ->badge()
-                    ->getStateUsing(function (PaymentMethod $pMethod) {
-                        return $pMethod->is_wallet ? 'Yes' : 'No';
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        'No' => 'danger',
-                        'Yes' => 'success',
-                    }),
+                IconColumn::make('is_cash')
+                    ->boolean()
+                    ->trueColor('info')
+                    ->falseColor('warning')
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->label(__('Is Cash')),
+                IconColumn::make('is_debit')
+                    ->boolean()
+                    ->trueColor('info')
+                    ->falseColor('warning')
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->label(__('Is Debit')),
+                IconColumn::make('is_credit')
+                    ->boolean()
+                    ->trueColor('info')
+                    ->falseColor('warning')
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->label(__('Is Credit')),
+                IconColumn::make('is_wallet')
+                    ->boolean()
+                    ->trueColor('info')
+                    ->falseColor('warning')
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->label(__('Is Wallet')),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

@@ -63,9 +63,9 @@ class Profile extends Model
                 ->label(__('Language'))
                 ->selectablePlaceholder(false)
                 ->options([
+                    '' => '-- ' . __('Choose Language') . ' --',
                     'id' => 'Bahasa Indonesia',
-                    'en' => 'English',
-                    'es' => 'Español',
+                    'en' => 'English'
                 ]),
             FileUpload::make('photo')
                 ->visible(feature('edit-profile'))
