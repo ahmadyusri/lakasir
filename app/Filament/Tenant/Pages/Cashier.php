@@ -20,6 +20,7 @@ use App\Rules\ShouldSameWithSellingDetail;
 use App\Services\Tenants\SellingService;
 use App\Services\VoucherService;
 use App\Traits\HasTranslatableResource;
+use Carbon\Carbon;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -71,6 +72,8 @@ class Cashier extends Page implements HasForms, HasTable
 
     private float $discount_price = 0;
 
+    public string $serverTime;
+
     public function mount()
     {
         $this->about = About::first() ?? null;
@@ -114,6 +117,8 @@ class Cashier extends Page implements HasForms, HasTable
         ]);
 
         $this->fillPayemntMethod();
+
+        $this->serverTime = Carbon::now()->toIso8601String();
     }
 
     protected function getForms(): array

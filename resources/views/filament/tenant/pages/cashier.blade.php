@@ -9,11 +9,16 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
       {{ $this->table }}
     </div>
     <div class="fixed right-0 w-1/3 h-screen pb-10 overflow-y-scroll">
-      <div class="px-4 mt-4 space-y-2 h-screen">
-        <div class="flex justify-between items-center" x-data="fullscreen">
-          <p class="text-xl font-semibold">{{ __('Orders details') }}</p>
+      <div class="px-4 mt-4 space-y-2 h-screen  min-w-[500px]">
+        <div class="flex justify-between items-center gap-2" x-data="fullscreen">
+          <div class="flex gap-4 justify-between items-center flex-1">
+            <p class="flex-1 line-clamp-1"><span class="md:inline-block hidden">{{ __('Cashier') }} : </span><span class="text-xl font-semibold">{{ Filament::auth()->user()->cashier_name }}</span></p>
+            <span class="">
+              <span class="font-bold text-gray-900 dark:text-white" id="real-time-dayName">-</span>, <span class="text-nowrap text-primary-600 dark:text-primary-400 text-xl font-extrabold" id="real-time-clock">-</span>
+            </span>
+          </div>
           <div class="flex items-center">
-            <div class="xl:flex gap-x-2 hidden items-center">
+            <div class="flex gap-x-2 items-center">
               <a
                 href="/member/sellings"
                 class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg gap-x-1 text-gray-500">
@@ -54,9 +59,6 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
           </div>
         </div>
         <hr/>
-        <div class="lg:flex hidden justify-between">
-          <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
-        </div>
         <div class="flex justify-between items-center">
           <p class="hidden lg:block text-2xl font-semibold mb-2">{{ __('Current Orders') }}</p>
           <div class="flex gap-x-1"></div>
@@ -322,6 +324,27 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
 
 @script()
 <script>
+  let serverTimeStr = @json($this->serverTime);
+  let currentTime = new Date(serverTimeStr);
+  const clockElement = document.getElementById('real-time-clock');
+  const dayNameElement = document.getElementById('real-time-dayName');
+
+  function updateClock() {
+    dayNameElement.textContent = currentTime.toLocaleDateString('id-ID', { weekday: 'long' });
+
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const seconds = currentTime.getSeconds();
+    clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+    currentTime.setSeconds(currentTime.getSeconds() + 1);
+  }
+
+  if (window.cashierClockInterval) {
+    clearInterval(window.cashierClockInterval);
+  }
+
+  window.cashierClockInterval = setInterval(updateClock, 1000);
+
   let selling = null;
   $wire.on('selling-created', (event) => {
     selling = event.selling;
@@ -478,12 +501,10 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
       }
     }
   });
-
   Alpine.data('cart', () => {
     return {
       add: (productId, amount) => {
         $wire.addCart(productId, {amount: amount ?? 0})
-        console.log(productId, amount)
       }
     }
   })
@@ -564,10 +585,14 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
   });
 
   document.addEventListener('keypress', (event) => {
-    if (modalOpened) {
+    const activeElementTagName = document.activeElement.tagName;
+    if (activeElementTagName === 'INPUT' || activeElementTagName === 'TEXTAREA' || activeElementTagName === 'SELECT') {
       return;
     }
 
+    if (modalOpened) {
+      return;
+    }
     if (!scannerEnabled) {
       return;
     }
@@ -576,15 +601,20 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
     }
 
     if (event.key === 'Enter') {
-      console.log('Barcode scanned:', barcodeData);
+      if(barcodeData.trim() === '') {
+        event.preventDefault();
+        return;
+      }
+
+      scannerEnabled = false;
       $wire.addCartUsingScanner(barcodeData);
 
-      barcodeData = '';
-      scannerEnabled = false;
-
       setTimeout(() => {
+        barcodeData = '';
         scannerEnabled = true;
-      }, 1000);
+      }, 500);
+
+      event.preventDefault();
     } else {
       barcodeData += event.key;
     }

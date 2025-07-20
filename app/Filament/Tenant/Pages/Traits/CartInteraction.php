@@ -13,7 +13,7 @@ trait CartInteraction
     {
         if (! $product->is_non_stock && ($product->stock < 0 || $product->stock < $qty)) {
             Notification::make()
-                ->title(__('Stock is out'))
+                ->title(($product->stock > 0 ? __(':stock stock remain', ['stock' => $product->stock]) :  __('Stock is out')) . ' : ' . $product->name)
                 ->danger()
                 ->send();
             $this->mount();
@@ -111,7 +111,7 @@ trait CartInteraction
         $value = $value != '' ? $value : 0;
         if ($cartItem->product->qty <= $value) {
             Notification::make()
-                ->title(__('Stock is out'))
+                ->title($cartItem->product->qty > 0 ? __(':stock stock remain', ['stock' => $cartItem->product->qty]) :  __('Stock is out'))
                 ->danger()
                 ->send();
             $this->mount();
@@ -142,30 +142,32 @@ trait CartInteraction
 
     public function addCartUsingScanner(string $value)
     {
+        $value = trim($value);
+
         $product = Product::whereBarcode($value)
             ->orWhere('sku', $value)
             ->first();
 
         if (! $product) {
             Notification::make()
-                ->title(__('Product not found'))
+                ->title(__('Product not found') . " : " . $value)
                 ->warning()
                 ->send();
 
             return;
         }
 
-        $stock = 1;
+        $newQty = 1;
 
         $cartItem = CartItem::whereProductId($product->getKey())
             ->cashier()
             ->first();
         if ($cartItem) {
-            $stock = $cartItem->qty + 1;
+            $newQty = $cartItem->qty + 1;
         }
 
         $this->addCart($product, [
-            'amount' => $stock,
+            'amount' => $newQty,
         ]);
     }
 }

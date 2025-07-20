@@ -265,6 +265,7 @@
     "Payment method": "Método de pago",
     "Note": "Nota",
     "Stock is out": "Inventario agotado",
+    ":stock stock remain": ":stock inventario restantes",
     "Cart has been cleared": "El carrito ha sido vaciado",
     "Item name": "Nombre del artículo",
     "Items": "Artículos",

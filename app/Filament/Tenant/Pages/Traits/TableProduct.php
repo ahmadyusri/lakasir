@@ -4,10 +4,7 @@ namespace App\Filament\Tenant\Pages\Traits;
 
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
-use Closure;
-use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\HeaderActionsPosition;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -36,7 +33,6 @@ trait TableProduct
                         ->orWhere('type', 'service');
                     })
                     ->where('show', true)
-                    // ->orWhere('type', 'service')
                     ->limit(12)
             )
             ->paginated(false)
@@ -49,9 +45,9 @@ trait TableProduct
                             'class' => 'py-0',
                         ])
                         ->extraImgAttributes([
-                            'class' => 'mb-4 object-cover -mt-4 xl:w-[200px] md:w-[180px] w-[150px]',
+                            'class' => 'py-0 mb-2 -mt-2 w-full object-contain',
                         ])
-                        ->height(100),
+                        ->height(150),
                     TextColumn::make('selling_price')
                         ->color('primary')
                         ->money(Setting::get('currency', 'IDR'))
@@ -86,33 +82,23 @@ trait TableProduct
                 'md' => 3,
                 'xl' => 4,
             ])
-            ->headerActionsPosition(HeaderActionsPosition::Bottom)
             ->searchPlaceholder(__('Search (SKU, name, barcode)'))
             ->actions([
                 Action::make('insert_amount')
                     ->translateLabel()
                     ->icon('heroicon-o-plus')
                     ->button()
-                    ->form([
-                        TextInput::make('amount')
-                            ->translateLabel()
-                            ->extraAttributes([
-                                'focus',
-                            ])
-                            ->rules([
-                                function (Product $product) {
-                                    return function (string $attribute, $value, Closure $fail) use ($product) {
-                                        if (! $this->validateStock($product, $value)) {
-                                            $fail('Stock is out');
-                                        }
-                                    };
-                                },
-                            ])
-                            ->default(1),
-                    ])
                     ->extraAttributes([
                         'class' => 'mr-auto',
                     ])
+                    ->action(function (Product $product) {
+                        $cartItem = $product->CartItems()->first();
+                        $currentQty = $cartItem ? $cartItem->qty : 0;
+
+                        $newQty = $currentQty + 1;
+
+                        $this->addCart($product, ['amount' => $newQty]);
+                    })
                     ->action(fn (Product $product, array $data) => $this->addCart($product, $data))
                     ->hiddenLabel(),
                 Action::make('cart')
@@ -121,6 +107,7 @@ trait TableProduct
                     })
                     ->color('white')
                     ->icon('heroicon-o-shopping-bag')
+                    ->disabled()
                     ->hidden(fn (Product $product) => ! $product->CartItems()->exists()),
             ]);
     }

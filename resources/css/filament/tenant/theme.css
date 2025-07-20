@@ -41,3 +41,23 @@
 .fi-tabs {
   @apply mx-0;
 }
+
+
+/* Search Placeholder */
+.fi-ta-header-toolbar .fi-ta-search-field {
+  flex-grow: 1;
+  max-width: 500px;
+}
+
+.fi-ta-header-toolbar .fi-ta-search-field .fi-input-wrp {
+  width: 100%;
+}
+
+.fi-ta-header-toolbar .fi-ta-search-field .fi-input-wrp input[type="search"] {
+  width: 100%;
+}
+
+.fi-ta-header-toolbar > div:last-child {
+  flex-grow: 1;
+  justify-content: flex-end;
+}
