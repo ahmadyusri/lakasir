@@ -19,4 +19,9 @@ class Report extends Page
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.tenant.pages.report';
+
+    public function mount()
+    {
+        abort_unless(can('generate selling report') || can('generate product report') || can('generate cashier report') || can('generate purchasing report'), 403);
+    }
 }

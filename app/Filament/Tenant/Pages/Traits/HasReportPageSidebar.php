@@ -23,16 +23,16 @@ trait HasReportPageSidebar
         return FilamentPageSidebar::make()
             ->topbarNavigation()
             ->setNavigationItems([
-                static::generateNavigationItem(SellingReport::class),
-                static::generateNavigationItem(ProductReport::class),
-                static::generateNavigationItem(CashierReport::class),
-                static::generateNavigationItem(PurchasingReport::class),
+                static::generateNavigationItem(SellingReport::class, 'generate selling report'),
+                static::generateNavigationItem(ProductReport::class, 'generate product report'),
+                static::generateNavigationItem(CashierReport::class, 'generate cashier report'),
+                static::generateNavigationItem(PurchasingReport::class, 'generate purchasing report'),
             ]);
     }
 
     private static function generateNavigationItem(string $resource, ?string $feature = null): PageNavigationItem
     {
-        $canAccess = $feature ? feature($feature) && $resource::canAccess() : $resource::canAccess();
+        $canAccess = $feature ? can($feature) && $resource::canAccess() : $resource::canAccess();
 
         $active = false;
         if ((new $resource) instanceof Page) {

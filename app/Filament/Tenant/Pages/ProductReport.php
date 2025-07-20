@@ -37,6 +37,8 @@ class ProductReport extends Page implements HasActions, HasForms
 
     public function mount()
     {
+        abort_unless(can('generate product report'), 403);
+
         $this->generate(new ProductReportService);
     }
 

@@ -12,7 +12,7 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
       <div class="px-4 mt-4 space-y-2 h-screen  min-w-[500px]">
         <div class="flex justify-between items-center gap-2" x-data="fullscreen">
           <div class="flex gap-4 justify-between items-center flex-1">
-            <p class="flex-1 line-clamp-1"><span class="md:inline-block hidden">{{ __('Cashier') }} : </span><span class="text-xl font-semibold">{{ Filament::auth()->user()->cashier_name }}</span></p>
+            <p class="flex-1 line-clamp-1"><span class="md:inline-block hidden">{{ __('Cashier') }} :</span> <span class="text-xl font-semibold">{{ Filament::auth()->user()->cashier_name }}</span></p>
             <span class="">
               <span class="font-bold text-gray-900 dark:text-white" id="real-time-dayName">-</span>, <span class="text-nowrap text-primary-600 dark:text-primary-400 text-xl font-extrabold" id="real-time-clock">-</span>
             </span>

@@ -35,6 +35,8 @@ class PurchasingReport extends Page
 
     public function mount()
     {
+        abort_unless(can('generate purchasing report'), 403);
+
         $this->generate(new PurchasingReportService());
     }
 
