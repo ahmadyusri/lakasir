@@ -29,6 +29,18 @@ return [
     'email' => 'Isian :attribute harus berupa alamat surel yang valid.',
     'exists' => 'Isian :attribute yang dipilih tidak valid.',
     'filled' => 'Isian :attribute wajib diisi.',
+    'gt' => [
+        'array' => 'Isian :attribute harus lebih besar dari :value item.',
+        'file' => 'Isian :attribute harus lebih besar dari :value kilobytes.',
+        'numeric' => 'Isian :attribute harus lebih besar dari :value.',
+        'string' => 'Isian :attribute harus lebih besar dari :value karakter.',
+    ],
+    'gte' => [
+        'array' => 'Isian :attribute harus memiliki :value item atau lebih.',
+        'file' => 'Isian :attribute harus lebih besar atau sama dengan :value kilobytes.',
+        'numeric' => 'Isian :attribute harus lebih besar atau sama dengan :value.',
+        'string' => 'Isian :attribute harus lebih besar atau sama dengan :value karakter.',
+    ],
     'image' => 'Isian :attribute harus berupa gambar.',
     'in' => 'Isian :attribute yang dipilih tidak valid.',
     'in_array' => 'Isian :attribute tidak terdapat dalam :other.',

@@ -77,8 +77,12 @@ function padText(text, length, alignRight = false, center = false, textSize = 'n
 
 function moneyFormat(number, currency = null) {
   const formatter = new Intl.NumberFormat({
-    style: 'currency',
-    currency: currency,
+    ...(currency
+      ? {
+          style: "currency",
+          currency: currency,
+        }
+      : {}),
   });
 
   return formatter.format(number);
