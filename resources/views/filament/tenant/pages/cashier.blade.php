@@ -472,24 +472,24 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
       cartDetail: @js($cartDetail),
       subtotal: $wire.entangle('total_price'),
       shortcut(number) {
-        this.$refs.payedMoney.value = moneyFormat(number);
+        this.$refs.payedMoney.value = number;
         this.changes();
         return;
       },
       append(number) {
         if(number == 'no_changes') {
-          this.$refs.payedMoney.value = moneyFormat(this.subtotal);
+          this.$refs.payedMoney.value = this.subtotal;
           this.changes();
           return;
         }
         if(number == 'backspace') {
           this.displayValue = this.displayValue.slice(0, -1);
-          this.$refs.payedMoney.value = moneyFormat(this.displayValue);
+          this.$refs.payedMoney.value = this.displayValue;
           this.changes();
           return;
         }
         this.displayValue += number;
-        this.$refs.payedMoney.value = moneyFormat(this.displayValue);
+        this.$refs.payedMoney.value = this.displayValue;
         this.changes();
       },
       changes() {
